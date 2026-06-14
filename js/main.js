@@ -42,7 +42,7 @@ window.addEventListener('resize', fitGame);
 window.addEventListener('orientationchange', () => setTimeout(fitGame, 120));
 
 document.body.addEventListener('touchstart', (e) => {
-  if (e.target.closest('#touch-ui')) return;
+  if (e.target.closest('#touch-ui') || e.target.closest('#overlay')) return;
   if (e.target === canvas || e.target.closest('#game-wrap')) e.preventDefault();
 }, { passive: false });
 

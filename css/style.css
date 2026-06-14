@@ -47,6 +47,7 @@ body {
   inset: 0;
   pointer-events: none;
   border-radius: 4px;
+  z-index: 20;
 }
 #overlay.on { pointer-events: auto; }
 
@@ -175,6 +176,19 @@ body {
 }
 .btn:hover { transform: scale(1.04); filter: brightness(1.1); }
 .btn:active { transform: scale(0.98); }
+.btn-start {
+  margin-top: 28px;
+  padding: 16px 48px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+.panel-hint {
+  margin-top: 14px !important;
+  font-size: 13px !important;
+  color: #668899 !important;
+}
 .box {
   background: rgba(20, 30, 50, 0.85);
   border: 1px solid rgba(136, 204, 170, 0.4);

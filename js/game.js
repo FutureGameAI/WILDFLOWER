@@ -146,7 +146,10 @@ export class Game {
     }
     const go = () => {
       if (this.data.lvl > 0) this.load(this.data.lvl, 'continue');
-      else this.intro.start(() => this.ui.controls(() => this.load(0, 'start')));
+      else this.intro.start(() => {
+        this.state = S.CTRL;
+        this.ui.controls(() => this.load(0, 'start'));
+      });
     };
     if (!this.data.username) {
       this.ui.username((name) => {
@@ -167,7 +170,10 @@ export class Game {
     this.ui.username((name) => {
       this.data.username = name;
       save(this.data);
-      this.intro.start(() => this.ui.controls(() => this.load(0, 'start')));
+      this.intro.start(() => {
+        this.state = S.CTRL;
+        this.ui.controls(() => this.load(0, 'start'));
+      });
     });
   }
 

@@ -87,9 +87,13 @@ export class UI {
           <p>Lose a heart → return to last checkpoint (5 hearts for the whole run)</p>
           <p>All hearts lost → Game Over, restart from Level 1</p>
           <p>Pause — Escape (N = SFX, M = Music)</p>
-          <p><strong>Mobile:</strong> on-screen ◀ ▶ ↑ FLOAT ✦ ⏸ buttons appear automatically</p></div>
-          <p>Explore 15 regions of the ruined sky-garden. Collect Heart Petals. Restore the Rain Engine. Survive the Blight.</p></div>
-        <button class="btn" id="st">Enter the Garden</button>
+          <p><strong>Mobile:</strong> on-screen ◀ ▶ ↑ FLOAT ✦ ⏸ buttons appear automatically</p>
+        </div>
+        <div class="box"><h3>Goal</h3>
+          <p>Explore 15 regions of the ruined sky-garden. Collect Heart Petals. Restore the Rain Engine. Survive the Blight.</p>
+        </div>
+        <button class="btn btn-start" id="st" type="button">Enter the Garden →</button>
+        <p class="panel-hint">Click the pink button above to start playing</p>
       </div>`;
     document.getElementById('st').onclick = () => {
       unlockAudio().then(() => { musicIntro(); sfx.ui(); });
