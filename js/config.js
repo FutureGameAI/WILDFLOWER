@@ -1,4 +1,2 @@
-// Optional global leaderboard (Supabase). Leave empty for local-only scores.
-// GitHub Pages: create a free Supabase project, add a `scores` table, paste URL + anon key here.
-export const SUPABASE_URL = '';
-export const SUPABASE_ANON_KEY = '';
+export const SUPABASE_URL = 'https://qfawamcbfttsunompupw.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_DQ2wdK6Lgik4TQOlP5z1yg_C-XTj91w';
