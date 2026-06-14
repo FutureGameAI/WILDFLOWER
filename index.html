@@ -16,11 +16,13 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div id="game-wrap">
-    <canvas id="c" width="1280" height="720"></canvas>
-    <div id="overlay"></div>
-    <div id="load-tip">Loading WILDFLOWER...</div>
+  <div id="stage">
+    <div id="game-wrap">
+      <canvas id="c" width="1280" height="720"></canvas>
+      <div id="load-tip">Loading WILDFLOWER...</div>
+    </div>
   </div>
+  <div id="overlay"></div>
   <div id="touch-ui" aria-label="Touch controls">
     <div class="touch-cluster touch-cluster-left">
       <button type="button" class="tbtn" data-act="left" aria-label="Move left">◀</button>
@@ -33,6 +35,7 @@
       <button type="button" class="tbtn tbtn-float" data-act="float" aria-label="Float">FLOAT</button>
     </div>
   </div>
+  <div id="rotate-hint">Rotate for the best view</div>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -56,6 +56,11 @@ export class Game {
     this.sessionFrames = 0;
     this.mapMode = 'start';
     this.showHelp = false;
+    this.onLayout = null;
+  }
+
+  showTouchControls() {
+    return this.state === S.PLAY || this.state === S.PAUSE || this.state === S.DEAD;
   }
 
   async refreshRank() {
@@ -672,6 +677,7 @@ export class Game {
 
   loop() {
     I.setTouchInput(getTouchState());
+    this.onLayout?.();
     this.update();
     this.draw();
     requestAnimationFrame(() => this.loop());

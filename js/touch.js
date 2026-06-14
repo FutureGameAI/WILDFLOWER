@@ -8,13 +8,39 @@ const touch = {
 };
 
 let active = false;
+let visible = false;
 
 export function isTouchUiActive() {
   return active;
 }
 
+export function isTouchUiVisible() {
+  return active && visible;
+}
+
+export function setTouchUiVisible(show) {
+  visible = show;
+  const ui = document.getElementById('touch-ui');
+  if (!ui || !active) return;
+  ui.classList.toggle('on', show);
+  if (!show) {
+    touch.left = false;
+    touch.right = false;
+    touch.float = false;
+    touch.jumpTap = false;
+    touch.actionTap = false;
+    touch.pauseTap = false;
+  }
+}
+
 export function getTouchState() {
   return touch;
+}
+
+export function getTouchBarHeight() {
+  if (!isTouchUiVisible()) return 0;
+  const landscape = window.innerWidth > window.innerHeight;
+  return Math.round(landscape ? Math.min(96, window.innerHeight * 0.22) : Math.min(118, window.innerHeight * 0.15));
 }
 
 function bindHold(el, onDown, onUp) {
@@ -54,7 +80,6 @@ export function initTouch() {
   }
 
   active = true;
-  ui.classList.add('on');
 
   bindHold(ui.querySelector('[data-act="left"]'), () => { touch.left = true; }, () => { touch.left = false; });
   bindHold(ui.querySelector('[data-act="right"]'), () => { touch.right = true; }, () => { touch.right = false; });
@@ -62,14 +87,4 @@ export function initTouch() {
   bindTap(ui.querySelector('[data-act="jump"]'), () => { touch.jumpTap = true; });
   bindTap(ui.querySelector('[data-act="action"]'), () => { touch.actionTap = true; });
   bindTap(ui.querySelector('[data-act="pause"]'), () => { touch.pauseTap = true; });
-}
-
-export function consumeTouchFlags() {
-  const j = touch.jumpTap;
-  const a = touch.actionTap;
-  const p = touch.pauseTap;
-  touch.jumpTap = false;
-  touch.actionTap = false;
-  touch.pauseTap = false;
-  return { jumpTap: j, actionTap: a, pauseTap: p };
 }
