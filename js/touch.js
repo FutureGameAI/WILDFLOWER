@@ -37,12 +37,6 @@ export function getTouchState() {
   return touch;
 }
 
-export function getTouchBarHeight() {
-  if (!isTouchUiVisible()) return 0;
-  const landscape = window.innerWidth > window.innerHeight;
-  return Math.round(landscape ? Math.min(96, window.innerHeight * 0.22) : Math.min(118, window.innerHeight * 0.15));
-}
-
 function bindHold(el, onDown, onUp) {
   const start = (e) => {
     e.preventDefault();
@@ -57,7 +51,6 @@ function bindHold(el, onDown, onUp) {
   el.addEventListener('pointerup', end);
   el.addEventListener('pointerleave', end);
   el.addEventListener('pointercancel', end);
-  el.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 function bindTap(el, onTap) {
@@ -66,14 +59,16 @@ function bindTap(el, onTap) {
     e.stopPropagation();
     onTap();
   });
-  el.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 export function initTouch() {
   const ui = document.getElementById('touch-ui');
   if (!ui) return;
 
-  const mobile = matchMedia('(pointer: coarse)').matches || window.innerWidth < 960;
+  const mobile = matchMedia('(pointer: coarse)').matches
+    || navigator.maxTouchPoints > 0
+    || window.innerWidth < 900;
+
   if (!mobile) {
     ui.remove();
     return;

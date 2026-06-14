@@ -1,47 +1,78 @@
 import { Game } from './game.js';
 import { unlockAudio } from './audio.js';
-import { initTouch, isTouchUiActive, setTouchUiVisible, getTouchBarHeight } from './touch.js';
+import { initTouch, isTouchUiActive, setTouchUiVisible } from './touch.js';
 
 const GW = 1280;
 const GH = 720;
+const ASPECT = GW / GH;
 
 const canvas = document.getElementById('c');
 const overlay = document.getElementById('overlay');
 const loadTip = document.getElementById('load-tip');
-const rotateHint = document.getElementById('rotate-hint');
+const rotateScreen = document.getElementById('rotate-screen');
+const wrap = document.getElementById('game-wrap');
 const game = new Game(canvas, overlay);
 
 initTouch();
 
-function isMobileLayout() {
-  return matchMedia('(pointer: coarse)').matches || window.innerWidth < 960;
+function isMobile() {
+  return matchMedia('(pointer: coarse)').matches
+    || navigator.maxTouchPoints > 0
+    || window.innerWidth < 900;
+}
+
+function isLandscape() {
+  return window.innerWidth > window.innerHeight;
 }
 
 function fitGame() {
-  const inPlay = game.showTouchControls?.() ?? false;
+  const mobile = isMobile();
+  const landscape = isLandscape();
   const menuOpen = overlay.classList.contains('on');
-  setTouchUiVisible(isTouchUiActive() && inPlay && !menuOpen);
+  const inPlay = (game.showTouchControls?.() ?? false) && !menuOpen;
+  const needTouch = mobile && inPlay && landscape;
 
-  const touchH = getTouchBarHeight();
+  document.body.classList.toggle('mobile', mobile);
+  document.body.classList.toggle('landscape', landscape);
+  document.body.classList.toggle('playing', inPlay);
+
+  setTouchUiVisible(needTouch);
+
+  const showRotate = mobile && inPlay && !landscape;
+  if (rotateScreen) rotateScreen.classList.toggle('show', showRotate);
+
+  const touchH = needTouch ? 76 : 0;
   document.documentElement.style.setProperty('--touch-h', `${touchH}px`);
 
-  const availW = window.innerWidth;
-  const availH = window.innerHeight - touchH;
-  const scaleW = availW / GW;
-  const scaleH = availH / GH;
+  if (showRotate) return;
 
-  let scale;
-  if (isMobileLayout()) {
-    scale = Math.max(scaleW, scaleH);
+  const vv = window.visualViewport;
+  const playW = vv?.width ?? window.innerWidth;
+  const playH = (vv?.height ?? window.innerHeight) - touchH;
+  let w;
+  let h;
+
+  if (mobile && landscape && inPlay) {
+    if (playW / playH > ASPECT) {
+      h = playH;
+      w = playH * ASPECT;
+    } else {
+      w = playW;
+      h = playW / ASPECT;
+    }
+  } else if (mobile) {
+    const scale = Math.min(playW / GW, playH / GH);
+    w = GW * scale;
+    h = GH * scale;
   } else {
-    scale = Math.min(scaleW, scaleH, 1);
+    const scale = Math.min(playW / GW, playH / GH, 1);
+    w = GW * scale;
+    h = GH * scale;
   }
 
-  document.documentElement.style.setProperty('--game-scale', String(scale));
-
-  const portrait = availH > availW;
-  document.body.classList.toggle('portrait-play', portrait && inPlay && isTouchUiActive());
-  if (rotateHint) rotateHint.style.display = portrait && inPlay && isTouchUiActive() ? 'block' : 'none';
+  wrap.style.width = `${w}px`;
+  wrap.style.height = `${h}px`;
+  wrap.style.transform = 'none';
 }
 
 function tryAudio() { unlockAudio(); }
@@ -63,10 +94,11 @@ canvas.addEventListener('pointerdown', (e) => {
 window.addEventListener('keydown', tryAudio, { once: true });
 window.addEventListener('pointerdown', tryAudio, { once: true });
 window.addEventListener('resize', fitGame);
-window.addEventListener('orientationchange', () => setTimeout(fitGame, 150));
+window.addEventListener('orientationchange', () => setTimeout(fitGame, 200));
+window.visualViewport?.addEventListener('resize', fitGame);
 
 document.body.addEventListener('touchstart', (e) => {
-  if (e.target.closest('#touch-ui') || e.target.closest('#overlay')) return;
+  if (e.target.closest('#touch-ui') || e.target.closest('#overlay') || e.target.closest('#rotate-screen')) return;
   if (e.target === canvas || e.target.closest('#game-wrap')) e.preventDefault();
 }, { passive: false });
 
