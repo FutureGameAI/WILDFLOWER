@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="WILDFLOWER — A 15-level sky-garden platformer. Collect Heart Petals, master four powers, defeat the Blight, and bring back the rain.">
+  <meta name="theme-color" content="#1a1030">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta property="og:title" content="WILDFLOWER">
+  <meta property="og:description" content="A beautiful 2D platform adventure about Iris, the last gardener of the floating sky-garden.">
+  <meta property="og:type" content="website">
+  <title>WILDFLOWER — Sky Garden Adventure</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-wrap">
+    <canvas id="c" width="1280" height="720"></canvas>
+    <div id="overlay"></div>
+    <div id="load-tip">Loading WILDFLOWER...</div>
+  </div>
+  <div id="touch-ui" aria-label="Touch controls">
+    <div class="touch-cluster touch-cluster-left">
+      <button type="button" class="tbtn" data-act="left" aria-label="Move left">◀</button>
+      <button type="button" class="tbtn" data-act="right" aria-label="Move right">▶</button>
+    </div>
+    <div class="touch-cluster touch-cluster-right">
+      <button type="button" class="tbtn tbtn-pause" data-act="pause" aria-label="Pause">⏸</button>
+      <button type="button" class="tbtn tbtn-action" data-act="action" aria-label="Ability">✦</button>
+      <button type="button" class="tbtn tbtn-jump" data-act="jump" aria-label="Jump">↑</button>
+      <button type="button" class="tbtn tbtn-float" data-act="float" aria-label="Float">FLOAT</button>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
