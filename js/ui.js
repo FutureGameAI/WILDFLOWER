@@ -222,7 +222,8 @@ export class IntroCanvas {
       if (this.scene < this.scenes.length - 1) {
         ctx.fillStyle = `rgba(170,200,255,${0.5 + Math.sin(t * 0.08) * 0.5})`;
         ctx.font = '16px Georgia';
-        ctx.fillText('Click or Space to continue', W / 2, H - 40);
+        const mobile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+        ctx.fillText(mobile ? 'Tap anywhere to continue' : 'Click or Space to continue', W / 2, H - 40);
       } else {
         const bw = 260, bh = 50, bx = W / 2 - bw / 2, by = H - 90;
         this.btn = { x: bx, y: by, w: bw, h: bh };

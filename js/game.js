@@ -63,6 +63,25 @@ export class Game {
     return this.state === S.PLAY || this.state === S.PAUSE || this.state === S.DEAD;
   }
 
+  blocksTouchScroll() {
+    return this.showTouchControls();
+  }
+
+  advanceDialog() {
+    if (!this.dlg) return;
+    if (this.dlg.ch < this.dlg.text.length) {
+      this.dlg.ch = this.dlg.text.length;
+      sfx.ui();
+      return;
+    }
+    if (this.dlgQ.length) this.dlg = { ...this.dlgQ.shift(), ch: 0 };
+    else {
+      this.dlg = null;
+      this.state = S.TITLE;
+      this.titleT = 0;
+    }
+  }
+
   async refreshRank() {
     try {
       this.leaderboardList = await fetchLeaderboard(100);
@@ -345,7 +364,7 @@ export class Game {
 
     if (this.state === S.TITLE) {
       this.titleT++;
-      if (this.titleT > 280 || (this.titleT > 55 && (I.tap('Space') || I.tap('Enter') || I.action()))) {
+      if (this.titleT > 280 || (this.titleT > 55 && (I.tap('Space') || I.tap('Enter') || I.consumeUiTap()))) {
         this.skipMap();
       }
       return;
@@ -364,9 +383,8 @@ export class Game {
 
     if (this.state === S.DIALOG) {
       if (this.dlg.ch < this.dlg.text.length) this.dlg.ch++;
-      else if (I.tap('Space') || I.tap('Enter') || I.action()) {
-        if (this.dlgQ.length) this.dlg = { ...this.dlgQ.shift(), ch: 0 };
-        else { this.dlg = null; this.state = S.TITLE; this.titleT = 0; }
+      else if (I.tap('Space') || I.tap('Enter') || I.consumeUiTap()) {
+        this.advanceDialog();
       }
       return;
     }
@@ -714,9 +732,9 @@ export class Game {
     }
 
     if (this.state === S.INTRO) this.intro.click(sx, sy);
-    if (this.state === S.DIALOG && this.dlg && this.dlg.ch >= this.dlg.text.length) {
-      if (this.dlgQ.length) this.dlg = { ...this.dlgQ.shift(), ch: 0 };
-      else { this.dlg = null; this.state = S.TITLE; this.titleT = 0; }
+    if (this.state === S.DIALOG && this.dlg) {
+      this.advanceDialog();
+      return;
     }
   }
 }

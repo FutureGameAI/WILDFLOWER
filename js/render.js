@@ -379,9 +379,11 @@ export function drawHUD(ctx, lvl, save, iris, dlg, runScore = 0, combo = 0, disp
     ctx.font = '16px Georgia';
     const t = dlg.text.slice(0, dlg.ch);
     ctx.fillText(t, 56, H - 72);
-    ctx.fillStyle = '#668';
-    ctx.font = '13px Georgia';
-    ctx.fillText('Space or Click to continue', 56, H - 44);
+    ctx.fillStyle = '#88ccaa';
+    ctx.font = 'bold 14px Georgia';
+    const mobile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+    const hint = mobile ? '▶  Tap anywhere to continue' : 'Space or click to continue';
+    ctx.fillText(hint, 56, H - 44);
   }
 }
 
@@ -412,6 +414,7 @@ function drawMapPath(ctx, nodes) {
 
 export function drawLevelMap(ctx, currentIdx, timer, mapMode = 'start') {
   const total = LEVELS.length;
+  const mobile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
   const fade = Math.min(1, timer / 35);
   const hold = timer < 260 ? 1 : Math.max(0, 1 - (timer - 260) / 30);
 
@@ -544,7 +547,7 @@ export function drawLevelMap(ctx, currentIdx, timer, mapMode = 'start') {
     const blink = Math.floor(timer / 28) % 2 === 0;
     ctx.fillStyle = blink ? '#88ccaa' : '#556677';
     ctx.font = '13px Georgia';
-    ctx.fillText('Space / Click to start', W / 2, H - 68);
+        ctx.fillText(mobile ? '▶ Tap to continue' : 'Space / Click to start', W / 2, H - 68);
   }
 
   ctx.textAlign = 'left';

@@ -77,19 +77,24 @@ function fitGame() {
 
 function tryAudio() { unlockAudio(); }
 
-canvas.addEventListener('click', (e) => {
+function handleCanvasPointer(clientX, clientY) {
   tryAudio();
-  game.click(e.clientX, e.clientY);
+  game.click(clientX, clientY);
+}
+
+let lastTouchEnd = 0;
+
+canvas.addEventListener('click', (e) => {
+  if (Date.now() - lastTouchEnd < 500) return;
+  handleCanvasPointer(e.clientX, e.clientY);
 });
 
-canvas.addEventListener('pointerdown', (e) => {
-  if (e.pointerType === 'touch') {
-    tryAudio();
-    const r = canvas.getBoundingClientRect();
-    const sy = (e.clientY - r.top) * (GH / r.height);
-    if (sy < 80) game.click(e.clientX, e.clientY);
-  }
-});
+canvas.addEventListener('touchend', (e) => {
+  if (!e.target.closest('#c')) return;
+  lastTouchEnd = Date.now();
+  const t = e.changedTouches[0];
+  if (t) handleCanvasPointer(t.clientX, t.clientY);
+}, { passive: true });
 
 window.addEventListener('keydown', tryAudio, { once: true });
 window.addEventListener('pointerdown', tryAudio, { once: true });
@@ -99,7 +104,9 @@ window.visualViewport?.addEventListener('resize', fitGame);
 
 document.body.addEventListener('touchstart', (e) => {
   if (e.target.closest('#touch-ui') || e.target.closest('#overlay') || e.target.closest('#rotate-screen')) return;
-  if (e.target === canvas || e.target.closest('#game-wrap')) e.preventDefault();
+  if (game.blocksTouchScroll?.() && (e.target === canvas || e.target.closest('#game-wrap'))) {
+    e.preventDefault();
+  }
 }, { passive: false });
 
 const overlayObs = new MutationObserver(fitGame);

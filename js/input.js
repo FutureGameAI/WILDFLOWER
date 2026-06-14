@@ -6,6 +6,7 @@ let touchFloat = false;
 let touchJumpTap = false;
 let touchActionTap = false;
 let touchPauseTap = false;
+let uiTap = false;
 
 const BLOCK = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Escape'];
 
@@ -56,6 +57,19 @@ export function clearInput() {
   touchJumpTap = false;
   touchActionTap = false;
   touchPauseTap = false;
+  uiTap = false;
+}
+
+export function signalUiTap() {
+  uiTap = true;
+}
+
+export function consumeUiTap() {
+  if (uiTap) {
+    uiTap = false;
+    return true;
+  }
+  return false;
 }
 
 export const down = (c) => !!k[c];
